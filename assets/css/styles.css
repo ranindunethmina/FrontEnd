@@ -1,0 +1,14 @@
+/* styles.css */
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.table {
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #343a40;
+    color: #ffffff;
+}
