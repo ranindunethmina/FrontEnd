@@ -110,7 +110,7 @@ const addCropToTable = (crop) => {
 
 // Fill form with crop data for updating
 const fillFormWithCropData = (crop) => {
-  document.getElementById("cropCode").value = crop.cropCode;
+  // document.getElementById("cropCode").value = crop.cropCode;
   document.getElementById("cropCommonName").value = crop.commonName;
   document.getElementById("cropScientificName").value = crop.scientificName;
   document.getElementById("cropCategory").value = crop.category;
@@ -130,7 +130,7 @@ const fillFormWithCropData = (crop) => {
 cropForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const cropCode = document.getElementById("cropCode").value;
+//  const cropCode = document.getElementById("cropCode").value;
   const commonName = document.getElementById("cropCommonName").value;
   const scientificName = document.getElementById("cropScientificName").value;
   const category = document.getElementById("cropCategory").value;
@@ -138,7 +138,7 @@ cropForm.addEventListener("submit", async (event) => {
   const field = document.getElementById("cropField").value;
 
   const formData = new FormData();
-  formData.append("cropCode", cropCode);
+  // formData.append("cropCode", cropCode);
   formData.append("commonName", commonName);
   formData.append("scientificName", scientificName);
   formData.append("category", category);

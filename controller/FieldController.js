@@ -1,67 +1,76 @@
 // Select Elements
+var imageInput1 = document.getElementById("input-image-1");
+var imageInput2 = document.getElementById("input-image-2");
+var imageInputDiv1 = document.querySelector(".image-input-1");
+var imageInputDiv2 = document.querySelector(".image-input-2");
 const fieldTableList = document.getElementById("field-table-list");
 const fieldModal = document.getElementById("field-modal");
 const fieldForm = document.getElementById("field-form");
 const fieldButton = document.getElementById("field-submit");
-const fieldImageInputs = document.querySelectorAll(".image-input");
-const addFieldButton = document.getElementById("add-field");
 
-let isFieldUpdateMode = false;
-let currentFieldCode = null;
-
-// Open the field modal
+// Open the modal
 const openFieldModal = () => {
   fieldModal.style.display = "block";
   if (!isFieldUpdateMode) {
-    fieldImageInputs.forEach((inputDiv) => (inputDiv.innerHTML = ""));
+    imageInputDiv1.innerHTML = "";
+    imageInputDiv2.innerHTML = "";
   }
 };
 
-// Close the field modal
+// Close the modal
 const closeFieldModal = () => {
   fieldModal.style.display = "none";
   fieldForm.reset();
   fieldButton.textContent = "Add Field";
   isFieldUpdateMode = false;
-  currentFieldCode = null;
+  currentFieldId = null;
 };
 
-document
-  .getElementById("add-field")
-  .addEventListener("click", openFieldModal);
+let isFieldUpdateMode = false;
+let currentFieldId = null;
+
+document.getElementById("add-field").addEventListener("click", openFieldModal);
 document
   .getElementById("field-modal-close")
   .addEventListener("click", closeFieldModal);
 
-// Handle file input selection
-fieldImageInputs.forEach((inputDiv, index) => {
-  inputDiv.onclick = () => {
-    const hiddenInput = inputDiv.nextElementSibling;
-    hiddenInput.click();
-  };
+// Handle image selection for the first input
+imageInputDiv1.onclick = function () {
+  imageInput1.click();
+};
 
-  const inputFile = inputDiv.nextElementSibling;
-  inputFile.onchange = function () {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = document.createElement("img");
-      img.src = e.target.result;
-      img.style.width = "100px";
-      img.style.height = "100px";
-      inputDiv.innerHTML = "";
-      inputDiv.appendChild(img);
-    };
-    reader.readAsDataURL(this.files[0]);
-  };
-});
+imageInput1.onchange = function () {
+  handleImagePreview(this.files[0], imageInputDiv1);
+};
 
-// Fetch all fields and populate the table
+// Handle image selection for the second input
+imageInputDiv2.onclick = function () {
+  imageInput2.click();
+};
+
+imageInput2.onchange = function () {
+  handleImagePreview(this.files[0], imageInputDiv2);
+};
+
+// Function to handle image preview
+function handleImagePreview(file, targetDiv) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const img = document.createElement("img");
+    img.src = e.target.result;
+    img.style.width = "100px";
+    img.style.height = "100px";
+    targetDiv.innerHTML = "";
+    targetDiv.appendChild(img);
+  };
+  reader.readAsDataURL(file);
+}
+
+// Load fields into the table
 const loadFieldsIntoTable = async () => {
   try {
     const response = await fetch("http://localhost:5055/courseWork/api/v1/field/allField");
-    if (!response.ok) {
-      throw new Error(`Failed to fetch fields: ${response.statusText}`);
-    }
+    if (!response.ok) throw new Error(`Failed to load fields: ${response.statusText}`);
     const fields = await response.json();
     fieldTableList.innerHTML = "";
     fields.forEach((field) => addFieldToTable(field));
@@ -74,22 +83,22 @@ const loadFieldsIntoTable = async () => {
 const addFieldToTable = (field) => {
   const row = document.createElement("tr");
 
-  const keys = ["fieldCode", "fieldName", "location", "extentSize"];
-  keys.forEach((key) => {
+  // Add text cells
+  ["fieldCode", "fieldName", "location", "extentSize"].forEach((key) => {
     const cell = document.createElement("td");
-    cell.textContent = key === "location" ? `${field.location.x},${field.location.y}` : field[key];
+    cell.textContent = field[key];
     row.appendChild(cell);
   });
 
-  // Add field images
-  ["fieldImage1", "fieldImage2"].forEach((imageKey) => {
-    const imageCell = document.createElement("td");
+  // Add image cells
+  ["fieldImage1", "fieldImage2"].forEach((key) => {
+    const cell = document.createElement("td");
     const img = document.createElement("img");
-    img.src = `data:image/png;base64,${field[imageKey]}`;
+    img.src = `data:image/png;base64,${field[key]}`;
     img.style.width = "50px";
     img.style.height = "50px";
-    imageCell.appendChild(img);
-    row.appendChild(imageCell);
+    cell.appendChild(img);
+    row.appendChild(cell);
   });
 
   // Add Update button
@@ -101,7 +110,7 @@ const addFieldToTable = (field) => {
     openFieldModal();
     fillFormWithFieldData(field);
     isFieldUpdateMode = true;
-    currentFieldCode = field.fieldCode;
+    currentFieldId = field.fieldCode;
     fieldButton.textContent = "Update Field";
   });
   updateCell.appendChild(updateButton);
@@ -129,63 +138,55 @@ const addFieldToTable = (field) => {
   removeCell.appendChild(removeButton);
   row.appendChild(removeCell);
 
-  // Append row to table
   fieldTableList.appendChild(row);
 };
 
 // Fill form with field data for updating
 const fillFormWithFieldData = (field) => {
-  document.getElementById("fieldcode").value = field.fieldCode;
   document.getElementById("name").value = field.fieldName;
-  document.getElementById("location").value = `${field.location.x},${field.location.y}`;
+  document.getElementById("location").value = field.location;
   document.getElementById("size").value = field.extentSize;
 
-  // Add images to form
-  [field.fieldImage1, field.fieldImage2].forEach((imageBase64, index) => {
-    const img = document.createElement("img");
-    img.src = `data:image/png;base64,${imageBase64}`;
-    img.style.width = "100px";
-    img.style.height = "100px";
-    fieldImageInputs[index].innerHTML = "";
-    fieldImageInputs[index].appendChild(img);
-  });
+  // Add image previews
+  handleImagePreviewFromBase64(field.fieldImage1, imageInputDiv1);
+  handleImagePreviewFromBase64(field.fieldImage2, imageInputDiv2);
 };
+
+function handleImagePreviewFromBase64(base64Image, targetDiv) {
+  const img = document.createElement("img");
+  img.src = `data:image/png;base64,${base64Image}`;
+  img.style.width = "100px";
+  img.style.height = "100px";
+  targetDiv.innerHTML = "";
+  targetDiv.appendChild(img);
+}
 
 // Handle form submission
 fieldForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const fieldCode = document.getElementById("fieldcode").value;
-  const fieldName = document.getElementById("name").value;
+  const name = document.getElementById("name").value;
   const location = document.getElementById("location").value;
-  const extentSize = parseFloat(document.getElementById("size").value);
+  const size = document.getElementById("size").value;
 
   const formData = new FormData();
-  formData.append("fieldName", fieldName);
-  formData.append("fieldLocation", location);
-  formData.append("fieldSize", extentSize);
+  formData.append("fieldName", name);
+  formData.append("location", location);
+  formData.append("extentSize", size);
 
-  fieldImageInputs.forEach((inputDiv, index) => {
-    const fileInput = inputDiv.nextElementSibling;
-    if (fileInput.files[0]) {
-      formData.append(`fieldImage${index + 1}`, fileInput.files[0]);
-    }
-  });
+  if (imageInput1.files[0]) formData.append("fieldImage1", imageInput1.files[0]);
+  if (imageInput2.files[0]) formData.append("fieldImage2", imageInput2.files[0]);
 
   const url = isFieldUpdateMode
-    ? `http://localhost:5055/courseWork/api/v1/field/${currentFieldCode}`
+    ? `http://localhost:5055/courseWork/api/v1/field/${currentFieldId}`
     : "http://localhost:5055/courseWork/api/v1/field";
-  const method = isFieldUpdateMode ? "PATCH" : "POST";
+  const method = isFieldUpdateMode ? "PUT" : "POST";
 
   try {
-    const response = await fetch(url, {
-      method,
-      body: formData,
-    });
-
+    const response = await fetch(url, { method, body: formData });
     if (response.ok) {
       alert(isFieldUpdateMode ? "Field updated successfully!" : "Field added successfully!");
-      loadFieldsIntoTable();
+      await loadFieldsIntoTable();
       closeFieldModal();
     } else {
       const errorText = await response.text();
@@ -196,5 +197,5 @@ fieldForm.addEventListener("submit", async (event) => {
   }
 });
 
-// Initialize table on page load
+// Load fields on page load
 loadFieldsIntoTable();

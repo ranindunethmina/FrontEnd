@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/assets/css/field.css" />
     <link rel="stylesheet" href="/assets/css/crop.css" />
     <link rel="stylesheet" href="/assets/css/staff.css" />
+    <link rel="stylesheet" href="/assets/css/log.css" />
     <link rel="stylesheet" href="/assets/css/vehicle.css" />
     <link rel="stylesheet" href="/assets/css/equipment.css" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
@@ -73,7 +74,7 @@
           <h4 class="nav-button-text">Equipment</h4>
         </button>
 
-<!--         
+        
         <button id="log-button" class="nav-button">
           <img
             src="/assets/images/icons8-log.png"
@@ -81,7 +82,7 @@
             alt="log"
           />
           <h4 class="nav-button-text">Log</h4>
-        </button> -->
+        </button>
       </nav>
     </aside>
 
@@ -122,10 +123,10 @@
           <h2>Add Field</h2>
 
           <form id="field-form" class="field-form">
-            <div class="field-form-row">
+            <!-- <div class="field-form-row">
               <label for="fieldcode">Field code :</label>
               <input type="text" id="fieldcode" name="fieldcode" required />
-            </div>
+            </div> -->
             <div class="field-form-row">
               <label for="name">Name :</label>
               <input type="text" id="name" name="name" required />
@@ -139,14 +140,14 @@
               <input type="text" id="size" name="size" required />
             </div>
             <div class="field-form-row-image">
-              <label for="input-image">Image 1 :</label>
-              <div class="image-input"></div>
-              <input type="file" id="input-image" style="display: none" />
+              <label for="input-image-1">Image 1 :</label>
+              <div class="image-input-1"></div>
+              <input type="file" id="input-image-1" style="display: none" />
             </div>
             <div class="field-form-row-image">
-              <label for="input-image">Image 2:</label>
-              <div class="image-input"></div>
-              <input type="file" id="input-image" style="display: none" />
+              <label for="input-image-2">Image 2:</label>
+              <div class="image-input-2"></div>
+              <input type="file" id="input-image-2" style="display: none" />
             </div>
             <button id="field-submit" type="submit">Add Field</button>
           </form>
@@ -186,10 +187,10 @@
           <span id="crop-modal-close" class="crop-close">&times;</span>
           <h2>Add Crop</h2>
           <form id="crop-form" class="crop-form">
-            <div class="crop-form-row">
+            <!-- <div class="crop-form-row">
               <label for="cropCode">Crop Code:</label>
               <input type="text" id="cropCode" name="cropCode" required />
-            </div>
+            </div> -->
             <div class="crop-form-row">
               <label for="cropCommonName">Common Name:</label>
               <input type="text" id="cropCommonName" name="cropCommonName" required />
@@ -234,13 +235,13 @@
             <th>Last Name</th>
             <th>Designation</th>
             <th>Gender</th>
-            <th>Joined Date</th>
-            <th>Date of Birth</th>
+            <!-- <th>Joined Date</th>
+            <th>Date of Birth</th> -->
             <th>Contact No.</th>
             <th>Email</th>
-            <th>Role</th>
+            <!-- <th>Role</th>
             <th>Field</th>
-            <th>Vehicle</th>
+            <th>Vehicle</th> -->
             <th>Address</th>
             <th>Update</th>
             <th>Remove</th>
@@ -258,10 +259,10 @@
           <span id="staff-modal-close" class="staff-close">&times;</span>
           <h2>Add Staff Member</h2>
           <form id="staff-form" class="staff-form">
-            <div class="staff-form-row">
+            <!-- <div class="staff-form-row">
               <label for="staffId">Staff ID:</label>
               <input type="text" id="staffId" name="staffId" required />
-            </div>
+            </div> -->
             <div class="staff-form-row">
               <label for="firstName">First Name:</label>
               <input type="text" id="firstName" name="firstName" required />
@@ -375,10 +376,10 @@
           <span id="vehicle-modal-close" class="vehicle-close">&times;</span>
           <h2>Add Vehicle</h2>
           <form id="vehicle-form" class="vehicle-form">
-            <div class="vehicle-form-row">
+            <!-- <div class="vehicle-form-row">
               <label for="vehicleCode">Vehicle Code:</label>
               <input type="text" id="vehicleCode" name="vehicleCode" required />
-            </div>
+            </div> -->
             <div class="vehicle-form-row">
               <label for="licensePlate">License Plate Number:</label>
               <input type="text" id="licensePlate" name="licensePlate" required />
@@ -395,8 +396,8 @@
               <label for="status">Status:</label>
               <select id="status" name="status" required>
                 <option value="">Select Status</option>
-                <option value="Available">Available</option>
-                <option value="Out of Service">Out of Service</option>
+                <option value="AVAILABLE">AVAILABLE</option>
+                <option value="NOT_AVAILABLE">NOT_AVAILABLE</option>
               </select>
             </div>
             <div class="vehicle-form-row">
@@ -443,10 +444,10 @@
           <span id="equipment-modal-close" class="equipment-close">&times;</span>
           <h2>Add Equipment</h2>
           <form id="equipment-form" class="equipment-form">
-            <div class="equipment-form-row">
+            <!-- <div class="equipment-form-row">
               <label for="equipmentId">Equipment ID:</label>
               <input type="text" id="equipmentId" name="equipmentId" required />
-            </div>
+            </div> -->
             <div class="equipment-form-row">
               <label for="name">Name:</label>
               <input type="text" id="name" name="name" required />
@@ -483,11 +484,73 @@
       </div>
     </section>
 
+    <!-- log-page -->
+    <section id="log-page" class="log-section-background">
+      <div class="log-section">
+        <h2 class="log-title">Log Management</h2>
+        <button id="add-log" class="log-button">Add Log</button>
+       </div>
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th>Log Code</th>
+              <th>Details</th>
+              <th>Log Date</th>
+              <th>Image</th>
+              <th>Update</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody id="log-table-list">
+            <!-- JavaScript will inject rows here -->
+          </tbody>
+        </table>
+
+      <div id="log-modal" class="log-modal">
+        <div class="log-modal-content">
+          <span id="log-modal-close" class="log-close">&times;</span>
+          <h2>Add Monitoring Log</h2>
+          <form id="log-form" class="log-form">
+            <!-- <div class="log-form-row">
+              <label for="logCode">Log Code:</label>
+              <input type="text" id="logCode" name="logCode" required />
+            </div> -->
+            <div class="log-form-row">
+              <label for="logDate">Log Date:</label>
+              <input type="date" id="logDate" name="logDate" required />
+            </div>
+            <div class="log-form-row">
+              <label for="logDetails">Observation Details:</label>
+              <input type="text" id="logDetails" name="logDetails" required />
+            </div>
+            <div class="log-form-row">
+              <label for="observedImage">Observed Image:</label>
+              <input type="file" id="observedImage" name="observedImage" />
+            </div>
+            <div class="log-form-row">
+              <label for="field">Field:</label>
+              <input type="text" id="field" name="field" />
+            </div>
+            <div class="log-form-row">
+              <label for="crop">Crop:</label>
+              <input type="text" id="crop" name="crop" />
+            </div>
+            <div class="log-form-row">
+              <label for="staff">Staff:</label>
+              <input type="text" id="staff" name="staff" />
+            </div>
+            <button id="log-submit" type="submit">Add Log</button>
+          </form>
+        </div>
+      </div>      
+    </section>
+    
     <script src="/controller/Navigation.js"></script>
     <script src="/controller/FieldController.js"></script>
     <script src="/controller/CropController.js"></script>
     <script src="/controller/EquipmentController.js"></script>
     <script src="/controller/VehicleController.js"></script>
     <script src="/controller/StaffController.js"></script>
+    <script src="/controller/logController.js"></script>
   </body>
 </html>

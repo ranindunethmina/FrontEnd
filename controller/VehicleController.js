@@ -98,7 +98,7 @@ const addVehicleToTable = (vehicle) => {
 
 // Fill form with vehicle data for updating
 const fillFormWithVehicleData = (vehicle) => {
-  document.getElementById("vehicleCode").value = vehicle.vehicleCode;
+  // document.getElementById("vehicleCode").value = vehicle.vehicleCode;
   document.getElementById("licensePlate").value = vehicle.licensePlate;
   document.getElementById("vehicleCategory").value = vehicle.category;
   document.getElementById("fuelType").value = vehicle.fuelType;
@@ -111,7 +111,7 @@ const fillFormWithVehicleData = (vehicle) => {
 vehicleForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const vehicleCode = document.getElementById("vehicleCode").value;
+  // const vehicleCode = document.getElementById("vehicleCode").value;
   const licensePlate = document.getElementById("licensePlate").value;
   const category = document.getElementById("vehicleCategory").value;
   const fuelType = document.getElementById("fuelType").value;
@@ -120,7 +120,7 @@ vehicleForm.addEventListener("submit", async (event) => {
   const remarks = document.getElementById("remarks").value;
 
   const vehicleData = {
-    vehicleCode,
+    // vehicleCode,
     licensePlate,
     category,
     fuelType,

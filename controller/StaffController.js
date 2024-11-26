@@ -47,9 +47,7 @@ const addStaffToTable = (staff) => {
   const row = document.createElement("tr");
 
   const keys = [
-    "id", "firstName", "lastName", "designation", "gender",
-    "joinedDate", "dob", "contactNo", "email", "role", "field", "vehicle"
-  ];
+    "id", "firstName", "lastName", "designation", "gender", "contactNo", "email"];
 
   // Add table cells for each key
   keys.forEach((key) => {
@@ -107,7 +105,7 @@ const addStaffToTable = (staff) => {
 
 // Fill form with staff data for updating
 const fillFormWithStaffData = (staff) => {
-  document.getElementById("staffId").value = staff.id || "";
+  // document.getElementById("staffId").value = staff.id || "";
   document.getElementById("firstName").value = staff.firstName || "";
   document.getElementById("lastName").value = staff.lastName || "";
   document.getElementById("designation").value = staff.designation || "";
@@ -133,7 +131,7 @@ staffForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const staffData = {
-    id: document.getElementById("staffId").value,
+    // id: document.getElementById("staffId").value,
     firstName: document.getElementById("firstName").value,
     lastName: document.getElementById("lastName").value,
     designation: document.getElementById("designation").value,
