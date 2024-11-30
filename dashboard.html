@@ -5,6 +5,7 @@
 
     <title>Crop Monitoring System</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/body.css" />
     <link rel="stylesheet" href="/assets/css/field.css" />
     <link rel="stylesheet" href="/assets/css/crop.css" />
@@ -21,66 +22,38 @@
     <aside>
       <nav class="nav-bar">
         <button id="home-button" class="nav-button">
-          <img
-            src="/assets/images/icons8-home.png"
-            class="nav-button-img"
-            alt="home"
-          />
+          <i class="fas fa-home" style="color:white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
           <h4 class="nav-button-text">Home</h4>
         </button>
 
         <button id="field-button" class="nav-button">
-          <img
-            src=""
-            class="nav-button-img"
-            alt="field"
-          />
+          <i class="fas fa-tree" style="color:white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i> <!-- Field -->
           <h4 class="nav-button-text">Field</h4>
         </button>
 
         <button id="crop-button" class="nav-button">
-          <img
-            src=""
-            class="nav-button-img"
-            alt="crop"
-          />
+          <i class="fas fa-seedling" style="color:white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i> <!-- Crop -->
           <h4 class="nav-button-text">Crop</h4>
         </button>
 
         <button id="staff-button" class="nav-button">
-          <img
-            src="/assets/images/icons8-staff.png"
-            class="nav-button-img"
-            alt="staff"
-          />
+          <i class="fas fa-users" style="color:white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
           <h4 class="nav-button-text">Staff</h4>
         </button>
 
         <button id="vehicle-button" class="nav-button">
-          <img
-            src=""
-            class="nav-button-img"
-            alt="vehicle"
-          />
+          <i class="fas fa-tractor" style="color:white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i> <!-- Vehicle -->
           <h4 class="nav-button-text">Vehicle</h4>
         </button>
 
         <button id="equipment-button" class="nav-button">
-          <img
-            src=""
-            class="nav-button-img"
-            alt="equipment"
-          />
+          <i class="fas fa-cogs" style="color:white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i> <!-- Equipment -->
           <h4 class="nav-button-text">Equipment</h4>
         </button>
-
         
         <button id="log-button" class="nav-button">
-          <img
-            src="/assets/images/icons8-log.png"
-            class="nav-button-img"
-            alt="log"
-          />
+          <i class="fas fa-clipboard-list" style="color:white; border: 2px solid white; border-radius: 50%; padding: 10px;"></i>
+
           <h4 class="nav-button-text">Log</h4>
         </button>
       </nav>
@@ -98,15 +71,16 @@
         <h2 class="order-title">Field Manage</h2>
         <button id="add-field" class="field-button">Add Field</button>
       </div>
+
       <table class="field-table">
         <thead>
           <tr>
             <th>Field code</th>
             <th>Name</th>
-            <th>Location</th>
             <th>Extent size</th>
-            <th>Field image1</th>
-            <th>Field image2</th>
+            <th>Location</th>
+            <th>Image 1</th>
+            <th>Image 2</th>
             <th>Update</th>
             <th>Remove</th>
           </tr>
@@ -123,32 +97,33 @@
           <h2>Add Field</h2>
 
           <form id="field-form" class="field-form">
-            <!-- <div class="field-form-row">
-              <label for="fieldcode">Field code :</label>
-              <input type="text" id="fieldcode" name="fieldcode" required />
-            </div> -->
             <div class="field-form-row">
               <label for="name">Name :</label>
               <input type="text" id="name" name="name" required />
             </div>
+
             <div class="field-form-row">
               <label for="location">Location :</label>
               <input type="text" id="location" name="location" required />
             </div>
+
             <div class="field-form-row">
               <label for="size">Extent size :</label>
               <input type="text" id="size" name="size" required />
             </div>
+
             <div class="field-form-row-image">
-              <label for="input-image-1">Image 1 :</label>
+              <label for="field-image-1">Image 1 :</label>
               <div class="image-input-1"></div>
-              <input type="file" id="input-image-1" style="display: none" />
+              <input type="file" id="field-image-1" style="display: none" />
             </div>
+
             <div class="field-form-row-image">
-              <label for="input-image-2">Image 2:</label>
+              <label for="field-image-2">Image 2:</label>
               <div class="image-input-2"></div>
-              <input type="file" id="input-image-2" style="display: none" />
+              <input type="file" id="field-image-2" style="display: none" />
             </div>
+
             <button id="field-submit" type="submit">Add Field</button>
           </form>
         </div>
@@ -161,6 +136,7 @@
         <h2 class="crop-title">Crop Management</h2>
         <button id="add-crop" class="crop-button">Add Crop</button>
       </div>
+      
       <table class="crop-table">
         <thead>
           <tr>
@@ -180,41 +156,44 @@
         </tbody>
       </table>
     
-      <!-- Crop Modal -->
-    
+      <!-- Crop Modal -->    
       <div id="crop-modal" class="crop-modal">
         <div class="crop-modal-content">
           <span id="crop-modal-close" class="crop-close">&times;</span>
           <h2>Add Crop</h2>
+          
           <form id="crop-form" class="crop-form">
-            <!-- <div class="crop-form-row">
-              <label for="cropCode">Crop Code:</label>
-              <input type="text" id="cropCode" name="cropCode" required />
-            </div> -->
             <div class="crop-form-row">
               <label for="cropCommonName">Common Name:</label>
               <input type="text" id="cropCommonName" name="cropCommonName" required />
             </div>
+            
             <div class="crop-form-row">
               <label for="cropScientificName">Scientific Name:</label>
               <input type="text" id="cropScientificName" name="cropScientificName" required />
             </div>
+            
             <div class="crop-form-row">
               <label for="cropCategory">Category:</label>
               <input type="text" id="cropCategory" name="cropCategory" required />
             </div>
+            
             <div class="crop-form-row">
               <label for="cropSeason">Season:</label>
               <input type="text" id="cropSeason" name="cropSeason" required />
             </div>
+            
             <div class="crop-form-row">
               <label for="cropField">Field:</label>
               <input type="text" id="cropField" name="cropField" required />
             </div>
+            
             <div class="crop-form-row-image">
-              <label for="cropImage">Image:</label>
-              <input type="file" id="cropImage" name="cropImage" required />
+              <label for="input-image">Image:</label>
+              <div class="image-input"></div>
+              <input type="file" id="input-image" style="display: none" />
             </div>
+            
             <button id="crop-submit" type="submit">Add Crop</button>
           </form>
         </div>
@@ -227,6 +206,7 @@
         <h2 class="staff-title">Staff Management</h2>
         <button id="add-staff" class="staff-button">Add Staff Member</button>
       </div>
+    
       <table class="staff-table">
         <thead>
           <tr>
@@ -235,13 +215,8 @@
             <th>Last Name</th>
             <th>Designation</th>
             <th>Gender</th>
-            <!-- <th>Joined Date</th>
-            <th>Date of Birth</th> -->
             <th>Contact No.</th>
             <th>Email</th>
-            <!-- <th>Role</th>
-            <th>Field</th>
-            <th>Vehicle</th> -->
             <th>Address</th>
             <th>Update</th>
             <th>Remove</th>
@@ -251,30 +226,29 @@
           <!-- JavaScript will inject rows here -->
         </tbody>
       </table>
-      <script src="/controller/"></script>
     
       <!-- Staff Modal -->
       <div id="staff-modal" class="staff-modal">
         <div class="staff-modal-content">
           <span id="staff-modal-close" class="staff-close">&times;</span>
           <h2>Add Staff Member</h2>
+          
           <form id="staff-form" class="staff-form">
-            <!-- <div class="staff-form-row">
-              <label for="staffId">Staff ID:</label>
-              <input type="text" id="staffId" name="staffId" required />
-            </div> -->
             <div class="staff-form-row">
               <label for="firstName">First Name:</label>
               <input type="text" id="firstName" name="firstName" required />
             </div>
+            
             <div class="staff-form-row">
               <label for="lastName">Last Name:</label>
               <input type="text" id="lastName" name="lastName" required />
             </div>
+            
             <div class="staff-form-row">
               <label for="designation">Designation:</label>
               <input type="text" id="designation" name="designation" required />
             </div>
+            
             <div class="staff-form-row">
               <label for="gender">Gender:</label>
               <select id="gender" name="gender" required>
@@ -283,22 +257,27 @@
                 <option value="FEMALE">FEMALE</option>
               </select>
             </div>
+            
             <div class="staff-form-row">
               <label for="joinedDate">Joined Date:</label>
               <input type="date" id="joinedDate" name="joinedDate" required />
             </div>
+            
             <div class="staff-form-row">
               <label for="dob">Date of Birth:</label>
               <input type="date" id="dob" name="dob" required />
             </div>
+            
             <div class="staff-form-row">
               <label for="contactNo">Contact No:</label>
               <input type="tel" id="contactNo" name="contactNo" required />
             </div>
+            
             <div class="staff-form-row">
               <label for="email">Email:</label>
               <input type="email" id="email" name="email" required />
             </div>
+            
             <div class="staff-form-row">
               <label for="role">Role:</label>
               <select id="role" name="role" required>
@@ -309,34 +288,32 @@
                 <option value="OTHER">OTHER</option>
               </select>
             </div>
-            <div class="staff-form-row">
-              <label for="field">Field:</label>
-              <input type="text" id="field" name="field" placeholder="Enter allocated fields or N/A" />
-            </div>
-            <div class="staff-form-row">
-              <label for="vehicle">Vehicle:</label>
-              <input type="text" id="vehicle" name="vehicle" placeholder="Enter allocated vehicles or N/A" />
-            </div>
+            
             <div class="staff-form-row">
               <label for="address1">Address Line 1:</label>
               <input type="text" id="address1" name="address1" />
             </div>
+            
             <div class="staff-form-row">
               <label for="address2">Address Line 2:</label>
               <input type="text" id="address2" name="address2" />
             </div>
+            
             <div class="staff-form-row">
               <label for="address3">Address Line 3:</label>
               <input type="text" id="address3" name="address3" />
             </div>
+            
             <div class="staff-form-row">
               <label for="address4">Address Line 4:</label>
               <input type="text" id="address4" name="address4" />
             </div>
+            
             <div class="staff-form-row">
               <label for="address5">Address Line 5:</label>
               <input type="text" id="address5" name="address5" />
             </div>
+            
             <button id="staff-submit" type="submit">Add Staff Member</button>
           </form>
         </div>
@@ -349,6 +326,7 @@
         <h2 class="vehicle-title">Vehicle Management</h2>
         <button id="add-vehicle" class="vehicle-button">Add Vehicle</button>
       </div>
+      
       <table class="vehicle-table">
         <thead>
           <tr>
@@ -367,31 +345,29 @@
           <!-- JavaScript will inject rows here -->
         </tbody>
       </table>
-      <script src="/controller/"></script>
     
-      <!-- Vehicle Modal -->
-    
+      <!-- Vehicle Modal -->    
       <div id="vehicle-modal" class="vehicle-modal">
         <div class="vehicle-modal-content">
           <span id="vehicle-modal-close" class="vehicle-close">&times;</span>
           <h2>Add Vehicle</h2>
+          
           <form id="vehicle-form" class="vehicle-form">
-            <!-- <div class="vehicle-form-row">
-              <label for="vehicleCode">Vehicle Code:</label>
-              <input type="text" id="vehicleCode" name="vehicleCode" required />
-            </div> -->
             <div class="vehicle-form-row">
               <label for="licensePlate">License Plate Number:</label>
               <input type="text" id="licensePlate" name="licensePlate" required />
             </div>
+    
             <div class="vehicle-form-row">
               <label for="vehicleCategory">Vehicle Category:</label>
               <input type="text" id="vehicleCategory" name="vehicleCategory" required />
             </div>
+    
             <div class="vehicle-form-row">
               <label for="fuelType">Fuel Type:</label>
               <input type="text" id="fuelType" name="fuelType" required />
             </div>
+    
             <div class="vehicle-form-row">
               <label for="status">Status:</label>
               <select id="status" name="status" required>
@@ -400,14 +376,17 @@
                 <option value="NOT_AVAILABLE">NOT_AVAILABLE</option>
               </select>
             </div>
+    
             <div class="vehicle-form-row">
               <label for="staff">Allocated Staff Member:</label>
               <input type="text" id="staff" name="staff" placeholder="Assigned driver or assistant" />
             </div>
+    
             <div class="vehicle-form-row">
               <label for="remarks">Remarks:</label>
               <input type="text" id="remarks" name="remarks" placeholder="Any special remarks or N/A" />
             </div>
+    
             <button id="vehicle-submit" type="submit">Add Vehicle</button>
           </form>
         </div>
@@ -420,6 +399,7 @@
         <h2 class="equipment-title">Equipment Management</h2>
         <button id="add-equipment" class="equipment-button">Add Equipment</button>
       </div>
+      
       <table class="equipment-table">
         <thead>
           <tr>
@@ -443,16 +423,13 @@
         <div class="equipment-modal-content">
           <span id="equipment-modal-close" class="equipment-close">&times;</span>
           <h2>Add Equipment</h2>
+          
           <form id="equipment-form" class="equipment-form">
-            <!-- <div class="equipment-form-row">
-              <label for="equipmentId">Equipment ID:</label>
-              <input type="text" id="equipmentId" name="equipmentId" required />
-            </div> -->
             <div class="equipment-form-row">
               <label for="name">Name:</label>
               <input type="text" id="name" name="name" required />
             </div>
-            
+    
             <div class="equipment-form-row">
               <label for="type">Type:</label>
               <select id="type" name="type" required>
@@ -461,7 +438,7 @@
                 <option value="Mechanical">Mechanical</option>
               </select>
             </div>
-            
+
             <div class="equipment-form-row">
               <label for="status">Status:</label>
               <select id="status" name="status" required>
@@ -470,14 +447,17 @@
                 <option value="NOT_AVAILABLE">NOT_AVAILABLE</option>
               </select>
             </div>
+
             <div class="equipment-form-row">
               <label for="staff">Staff:</label>
               <input type="text" id="staff" name="staff" placeholder="Assigned staff or N/A" />
             </div>
+
             <div class="equipment-form-row">
               <label for="field">Field:</label>
               <input type="text" id="field" name="field" placeholder="Assigned field or N/A" />
             </div>
+
             <button id="equipment-submit" type="submit">Add Equipment</button>
           </form>
         </div>
@@ -490,7 +470,8 @@
         <h2 class="log-title">Log Management</h2>
         <button id="add-log" class="log-button">Add Log</button>
        </div>
-        <table class="log-table">
+    
+       <table class="log-table">
           <thead>
             <tr>
               <th>Log Code</th>
@@ -510,35 +491,39 @@
         <div class="log-modal-content">
           <span id="log-modal-close" class="log-close">&times;</span>
           <h2>Add Monitoring Log</h2>
+          
           <form id="log-form" class="log-form">
-            <!-- <div class="log-form-row">
-              <label for="logCode">Log Code:</label>
-              <input type="text" id="logCode" name="logCode" required />
-            </div> -->
             <div class="log-form-row">
               <label for="logDate">Log Date:</label>
               <input type="date" id="logDate" name="logDate" required />
             </div>
+    
             <div class="log-form-row">
               <label for="logDetails">Observation Details:</label>
               <input type="text" id="logDetails" name="logDetails" required />
             </div>
-            <div class="log-form-row">
-              <label for="observedImage">Observed Image:</label>
-              <input type="file" id="observedImage" name="observedImage" />
+    
+            <div class="log-form-row-image">
+              <label for="observedImage">Image:</label>
+              <div class="image-input"></div>
+              <input type="file" id="observedImage" style="display: none;" />
             </div>
+    
             <div class="log-form-row">
               <label for="field">Field:</label>
               <input type="text" id="field" name="field" />
             </div>
+    
             <div class="log-form-row">
               <label for="crop">Crop:</label>
               <input type="text" id="crop" name="crop" />
             </div>
+    
             <div class="log-form-row">
               <label for="staff">Staff:</label>
               <input type="text" id="staff" name="staff" />
             </div>
+    
             <button id="log-submit" type="submit">Add Log</button>
           </form>
         </div>
