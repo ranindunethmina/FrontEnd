@@ -115,8 +115,8 @@ const fillFormWithStaffData = (staff) => {
   document.getElementById("contactNo").value = staff.contactNo || "";
   document.getElementById("email").value = staff.email || "";
   document.getElementById("role").value = staff.role || "";
-  document.getElementById("field").value = staff.field || "";
-  document.getElementById("vehicle").value = staff.vehicle || "";
+  // document.getElementById("field").value = staff.field || "";
+  // document.getElementById("vehicle").value = staff.vehicle || "";
 
   // Populate address lines
   document.getElementById("address1").value = staff.addressLine01 || "";

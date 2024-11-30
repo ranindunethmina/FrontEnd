@@ -58,8 +58,10 @@ const addVehicleToTable = (vehicle) => {
   // Add Update button
   const updateCell = document.createElement("td");
   const updateButton = document.createElement("button");
+
   updateButton.textContent = "Update";
   updateButton.className = "action-button";
+  
   updateButton.addEventListener("click", () => {
     openVehicleModal();
     fillFormWithVehicleData(vehicle);

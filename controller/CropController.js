@@ -1,21 +1,43 @@
 // Select Elements
+var imageInput = document.getElementById("input-image");
+var imageInputDiv = document.querySelector(".image-input");
 const cropTableList = document.getElementById("crop-table-list");
 const cropModal = document.getElementById("crop-modal");
 const cropForm = document.getElementById("crop-form");
 const cropButton = document.getElementById("crop-submit");
-const cropImageInput = document.getElementById("cropImage");
-const addCropButton = document.getElementById("add-crop");
+
+imageInputDiv.onclick = function () {
+  imageInput.click();
+};
+
+imageInput.onchange = function () {
+  var reader = new FileReader();
+
+  reader.onload = function (e) {
+    var img = document.createElement("img");
+    img.id = "crop-image-id";
+    img.src = e.target.result;
+    img.style.width = "100px";
+    img.style.height = "100px";
+
+    // Clear the div and add the new image
+    imageInputDiv.innerHTML = "";
+    imageInputDiv.appendChild(img);
+  };
+
+  // Read the image file as a data URL
+  reader.readAsDataURL(this.files[0]);
+};
+
+const openCropModal = () => {
+  cropModal.style.display = "block";
+  cropForm.reset();
+  imageInputDiv.innerHTML = ""; // Clear image div
+};
+
 
 let isCropUpdateMode = false;
 let currentCropCode = null;
-
-// Open the crop modal
-const openCropModal = () => {
-  cropModal.style.display = "block";
-  if (!isCropUpdateMode) {
-    cropImageInput.value = ""; // Clear file input
-  }
-};
 
 // Close the crop modal
 const closeCropModal = () => {
@@ -27,7 +49,9 @@ const closeCropModal = () => {
 };
 
 // Event Listeners for Modal Open/Close
-addCropButton.addEventListener("click", openCropModal);
+document
+  .getElementById("add-crop")
+  .addEventListener("click", openCropModal);
 document
   .getElementById("crop-modal-close")
   .addEventListener("click", closeCropModal);
@@ -50,7 +74,6 @@ const loadCropsIntoTable = async () => {
 // Add a single crop to the table
 const addCropToTable = (crop) => {
   const row = document.createElement("tr");
-
   const keys = ["cropCode", "commonName", "scientificName", "category", "season", "fieldCode"];
   keys.forEach((key) => {
     const cell = document.createElement("td");
@@ -58,20 +81,26 @@ const addCropToTable = (crop) => {
     row.appendChild(cell);
   });
 
-  // Add crop image
   const imageCell = document.createElement("td");
-  const img = document.createElement("img");
-  img.src = `data:image/png;base64,${crop.cropImage}`;
-  img.style.width = "50px";
-  img.style.height = "50px";
-  imageCell.appendChild(img);
+  const image = document.createElement("img");
+
+  const base64Image = crop.cropImage;
+
+  const imageFormat = getImageFormat(base64Image);
+  image.src = `data:${imageFormat};base64,${base64Image}`;
+  image.className = "crop-image";
+  image.style.width = "100px";
+  image.style.height = "100px";
+  imageCell.appendChild(image);
   row.appendChild(imageCell);
 
   // Add Update button
   const updateCell = document.createElement("td");
   const updateButton = document.createElement("button");
+
   updateButton.textContent = "Update";
   updateButton.className = "action-button";
+
   updateButton.addEventListener("click", () => {
     openCropModal();
     fillFormWithCropData(crop);
@@ -89,9 +118,11 @@ const addCropToTable = (crop) => {
   removeButton.className = "action-button";
   removeButton.addEventListener("click", async () => {
     try {
-      const response = await fetch(`http://localhost:5055/courseWork/api/v1/crops/${crop.cropCode}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(`http://localhost:5055/courseWork/api/v1/crops/${crop.cropCode}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (response.ok) {
         row.remove();
       } else {
@@ -108,22 +139,38 @@ const addCropToTable = (crop) => {
   cropTableList.appendChild(row);
 };
 
-// Fill form with crop data for updating
+function getImageFormat(base64String) {
+  const prefix = base64String.substr(0, 5);
+  if (prefix === "/9j/4") return "image/jpeg";
+  if (prefix === "iVBOR") return "image/png";
+  return "image/png";
+}
+
 const fillFormWithCropData = (crop) => {
-  // document.getElementById("cropCode").value = crop.cropCode;
+  // Populate text fields
   document.getElementById("cropCommonName").value = crop.commonName;
   document.getElementById("cropScientificName").value = crop.scientificName;
   document.getElementById("cropCategory").value = crop.category;
   document.getElementById("cropSeason").value = crop.season;
   document.getElementById("cropField").value = crop.fieldCode;
 
-  // Add image preview
-  const img = document.createElement("img");
-  img.src = `data:image/png;base64,${crop.cropImage}`;
-  img.style.width = "100px";
-  img.style.height = "100px";
-  const imagePreview = document.querySelector(".crop-form-row-image");
-  imagePreview.appendChild(img);
+  // Populate image preview
+  const base64Image = crop.cropImage; // Use the crop object directly
+  if (base64Image) {
+    const imageFormat = getImageFormat(base64Image);
+    const img = document.createElement("img");
+    img.src = `data:${imageFormat};base64,${base64Image}`;
+    img.id = "crop-image-id";
+    img.style.width = "100px";
+    img.style.height = "100px";
+
+    // Clear previous image and set new image
+    imageInputDiv.innerHTML = "";
+    imageInputDiv.appendChild(img);
+  } else {
+    // If no image is available
+    imageInputDiv.innerHTML = "No Image Available";
+  }
 };
 
 // Handle form submission
@@ -145,33 +192,42 @@ cropForm.addEventListener("submit", async (event) => {
   formData.append("season", season);
   formData.append("fieldCode", field);
 
-  if (cropImageInput.files[0]) {
-    formData.append("cropImage", cropImageInput.files[0]);
+  let imageFile = imageInput.files[0];
+
+  if (imageFile) {
+    formData.append("cropImage", imageFile, imageFile.name);
+  } else {
+    formData.append("cropImage", new Blob(), "empty");
   }
 
-  const url = isCropUpdateMode
-    ? `http://localhost:5055/courseWork/api/v1/crops/${currentCropCode}`
-    : "http://localhost:5055/courseWork/api/v1/crops";
-  const method = isCropUpdateMode ? "PATCH" : "POST";
 
   try {
-    const response = await fetch(url, {
-      method,
+    let url = "http://localhost:5055/courseWork/api/v1/crops";
+    let method = isCropUpdateMode ? "PATCH" : "POST";
+    let successMessage = isCropUpdateMode
+      ? "Crop Updated Successfully"
+      : "Crop Added Successfully";
+
+  if (isCropUpdateMode) {
+    url += `/${currentCropCode}`;
+  }
+
+  const response = await fetch(url, {
+      method: method,
       body: formData,
-    });
+  });
 
     if (response.ok) {
-      alert(isCropUpdateMode ? "Crop updated successfully!" : "Crop added successfully!");
-      loadCropsIntoTable();
+      const result = await response.text();
+      alert(successMessage);
+      await loadCropsIntoTable();
       closeCropModal();
     } else {
       const errorText = await response.text();
       alert(`Operation failed: ${errorText}`);
     }
   } catch (error) {
-    console.error("Error:", error);
+    alert("An error occurred while processing the crop data.");
   }
 });
-
-// Initialize table on page load
 loadCropsIntoTable();
