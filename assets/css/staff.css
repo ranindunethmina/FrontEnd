@@ -132,7 +132,7 @@
 }
   
 .staff-form button:hover {
-  background-color: #e67979;
+  background-color: lightskyblue;
 }
   
 .staff-form-row {
@@ -162,5 +162,5 @@
 }
   
 .staff-form-row input:focus {
-  outline: 2px solid lightseagreen;
+  outline: 2px solid lightskyblue;
 }  

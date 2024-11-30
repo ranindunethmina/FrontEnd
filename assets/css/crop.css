@@ -78,7 +78,7 @@
 .crop-modal-content {
   border-radius: 10px;
   background-color: #17181f;
-  margin: 4% auto;
+  margin: 5% auto;
   padding: 30px;
   width: 35%;
 }
@@ -132,7 +132,7 @@
 }
 
 .crop-form button:hover {
-  background-color: #e67979;
+  background-color: lightskyblue;
 }
 
 .crop-form-row {

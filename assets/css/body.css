@@ -16,27 +16,22 @@ body {
   flex-direction: column;
 }
 
-.nav-button-img {
-  width: 35px;
-  height: 35px;
-}
-
 .nav-button {
   padding-top: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 4px;
+  margin: 2px;
   background-color: transparent;
   border: none;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 10px;
   transition: background-color 0.3s ease; 
 }
 
 .nav-button-text {
-  margin: 13px;
+  margin: 10px;
   color: #b1b2b7;
 }
 

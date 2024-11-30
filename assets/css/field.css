@@ -16,10 +16,6 @@
   align-items: center;
 }
 
-.date {
-  color: #919298;
-}
-
 .field-table {
   width: 100%;
   border-collapse: separate;
@@ -62,7 +58,7 @@
 }
 
 .field-button:hover {
-  background-color: #f05756; 
+  background-color: lightseagreen; 
   color: white;
 }
 
@@ -96,7 +92,7 @@
 
 .field-close:hover,
 .field-close:focus {
-  color: #f05756;
+  color: lightseagreen;
   text-decoration: none;
   cursor: pointer;
 }
@@ -123,7 +119,7 @@
   color: white;
   border: none;
   border-radius: 5px;
-  background-color: #f05756;
+  background-color: lightseagreen;
   font-family: "Roboto", sans-serif;
   font-weight: 600;
   font-style: normal;
@@ -136,13 +132,34 @@
 }
 
 .field-form button:hover {
-  background-color: #e67979;
+  background-color: lightskyblue;
 }
 
 .field-form-row {
   display: flex;
   justify-content: space-between;
   margin: 5px;
+}
+
+.field-form-row-image {
+  display: flex;
+  gap: 25px;
+  margin: 5px;
+}
+
+.image-input-1,.image-input-2 {
+  border: 2px solid lightseagreen;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+
+.field-form-row-image label {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 17px;
+  width: 30%;
 }
 
 .field-form-row label {
@@ -166,5 +183,5 @@
 }
 
 .field-form-row input:focus {
-  outline: 2px solid #f05756;
+  outline: 2px solid lightskyblue;
 }

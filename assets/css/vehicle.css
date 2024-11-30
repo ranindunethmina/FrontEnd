@@ -132,7 +132,7 @@
 }
   
 .vehicle-form button:hover {
-  background-color: #e67979;
+  background-color: lightskyblue;
 }
   
 .vehicle-form-row {
@@ -162,5 +162,5 @@
 }
   
 .vehicle-form-row input:focus {
-  outline: 2px solid lightseagreen;
+  outline: 2px solid lightskyblue;
 }
