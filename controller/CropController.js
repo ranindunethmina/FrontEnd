@@ -89,8 +89,8 @@ const addCropToTable = (crop) => {
   const imageFormat = getImageFormat(base64Image);
   image.src = `data:${imageFormat};base64,${base64Image}`;
   image.className = "crop-image";
-  image.style.width = "100px";
-  image.style.height = "100px";
+  image.style.width = "50px";
+  image.style.height = "50px";
   imageCell.appendChild(image);
   row.appendChild(imageCell);
 
