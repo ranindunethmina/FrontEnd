@@ -35,11 +35,9 @@ const openCropModal = () => {
   imageInputDiv.innerHTML = ""; // Clear image div
 };
 
-
 let isCropUpdateMode = false;
 let currentCropCode = null;
 
-// Close the crop modal
 const closeCropModal = () => {
   cropModal.style.display = "none";
   cropForm.reset();
@@ -48,7 +46,6 @@ const closeCropModal = () => {
   currentCropCode = null;
 };
 
-// Event Listeners for Modal Open/Close
 document
   .getElementById("add-crop")
   .addEventListener("click", openCropModal);
@@ -118,11 +115,9 @@ const addCropToTable = (crop) => {
   removeButton.className = "action-button";
   removeButton.addEventListener("click", async () => {
     try {
-      const response = await fetch(`http://localhost:5055/courseWork/api/v1/crops/${crop.cropCode}`,
-        {
+      const response = await fetch(`http://localhost:5055/courseWork/api/v1/crops/${crop.cropCode}`,{
           method: "DELETE",
-        }
-      );
+      });
       if (response.ok) {
         row.remove();
       } else {
@@ -177,15 +172,35 @@ const fillFormWithCropData = (crop) => {
 cropForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-//  const cropCode = document.getElementById("cropCode").value;
   const commonName = document.getElementById("cropCommonName").value;
   const scientificName = document.getElementById("cropScientificName").value;
   const category = document.getElementById("cropCategory").value;
   const season = document.getElementById("cropSeason").value;
   const field = document.getElementById("cropField").value;
+  
+  // Validate form data
+  if (!commonName) {
+    alert("Common Name cannot be empty");
+    return;
+  }
+  if (commonName.length < 3 || commonName.length > 100) {
+    alert("Common Name must be between 3 and 100 characters");
+    return;
+  }
+  if (scientificName.length > 150) {
+    alert("Scientific Name must not exceed 150 characters");
+    return;
+  }
+  if (category.length > 50) {
+    alert("Category must not exceed 50 characters");
+    return;
+  }
+  if (!field) {
+    alert("Field Code cannot be empty");
+    return;
+  }
 
   const formData = new FormData();
-  // formData.append("cropCode", cropCode);
   formData.append("commonName", commonName);
   formData.append("scientificName", scientificName);
   formData.append("category", category);
@@ -199,7 +214,6 @@ cropForm.addEventListener("submit", async (event) => {
   } else {
     formData.append("cropImage", new Blob(), "empty");
   }
-
 
   try {
     let url = "http://localhost:5055/courseWork/api/v1/crops";
@@ -230,4 +244,5 @@ cropForm.addEventListener("submit", async (event) => {
     alert("An error occurred while processing the crop data.");
   }
 });
+
 loadCropsIntoTable();
