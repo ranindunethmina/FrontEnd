@@ -11,14 +11,16 @@ let currentEquipmentId = null;
 // Open the equipment modal
 const openEquipmentModal = () => {
   equipmentModal.style.display = "block";
-  equipmentForm.reset();
-  equipmentButton.textContent = "Add Equipment";
+  if (!isEquipmentUpdateMode) {
+    equipmentForm.reset(); // Reset form for adding a new equipment
+  }
 };
 
 // Close the equipment modal
 const closeEquipmentModal = () => {
   equipmentModal.style.display = "none";
   equipmentForm.reset();
+  equipmentButton.textContent = "Add Equipment";
   isEquipmentUpdateMode = false;
   currentEquipmentId = null;
 };
@@ -34,9 +36,9 @@ const loadEquipmentIntoTable = async () => {
     if (!response.ok) {
       throw new Error(`Failed to fetch equipment: ${response.statusText}`);
     }
-    const equipmentList = await response.json();
+    const equipments = await response.json();
     equipmentTableList.innerHTML = "";
-    equipmentList.forEach((equipment) => addEquipmentToTable(equipment));
+    equipments.forEach((equipment) => addEquipmentToTable(equipment));
   } catch (error) {
     console.error("Error loading equipment:", error);
   }
@@ -47,19 +49,19 @@ const addEquipmentToTable = (equipment) => {
   const row = document.createElement("tr");
 
   const keys = ["equipmentId", "name", "type", "status", "staffId", "fieldCode"];
-
-  // Add table cells for each key
   keys.forEach((key) => {
     const cell = document.createElement("td");
-    cell.textContent = equipment[key] || "N/A";
+    cell.textContent = equipment[key];
     row.appendChild(cell);
   });
 
   // Add Update button
   const updateCell = document.createElement("td");
   const updateButton = document.createElement("button");
+
   updateButton.textContent = "Update";
   updateButton.className = "action-button";
+
   updateButton.addEventListener("click", () => {
     openEquipmentModal();
     fillFormWithEquipmentData(equipment);
@@ -98,25 +100,29 @@ const addEquipmentToTable = (equipment) => {
 
 // Fill form with equipment data for updating
 const fillFormWithEquipmentData = (equipment) => {
-  document.getElementById("equipmentId").value = equipment.equipmentId || "";
-  document.getElementById("name").value = equipment.name || "";
-  document.getElementById("type").value = equipment.type || "";
-  document.getElementById("status").value = equipment.status || "";
-  document.getElementById("staff").value = equipment.staffId || "";
-  document.getElementById("field").value = equipment.fieldCode || "";
+  document.getElementById("name").value = equipment.name;
+  document.getElementById("type").value = equipment.type;
+  document.getElementById("status").value = equipment.status;
+  document.getElementById("staff").value = equipment.staffId;
+  document.getElementById("field").value = equipment.fieldCode;
 };
 
 // Handle form submission
 equipmentForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
+  const name = document.getElementById("name").value;
+  const type = document.getElementById("type").value;
+  const status = document.getElementById("status").value;
+  const staffId = document.getElementById("staff").value;
+  const fieldCode = document.getElementById("field").value;
+
   const equipmentData = {
-    equipmentId: document.getElementById("equipmentId").value,
-    name: document.getElementById("name").value,
-    type: document.getElementById("type").value,
-    status: document.getElementById("status").value,
-    staffId: document.getElementById("staff").value,
-    fieldCode: document.getElementById("field").value,
+    name,
+    type,
+    status,
+    staffId: staffId,
+    fieldCode: fieldCode,
   };
 
   const url = isEquipmentUpdateMode
@@ -140,7 +146,7 @@ equipmentForm.addEventListener("submit", async (event) => {
       alert(`Operation failed: ${errorText}`);
     }
   } catch (error) {
-    console.error("Error:", error);
+    alert("An error occurred. Check the console for details.");
   }
 });
 

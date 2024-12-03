@@ -1,31 +1,57 @@
 // Select Elements
+var imageInput = document.getElementById("observedImage");
+var imageInputDiv = document.querySelector(".image-input");
 const logTableList = document.getElementById("log-table-list");
 const logModal = document.getElementById("log-modal");
 const logForm = document.getElementById("log-form");
 const logButton = document.getElementById("log-submit");
-const addLogButton = document.getElementById("add-log");
+
+imageInputDiv.onclick = function () {
+  imageInput.click();
+};
+
+imageInput.onchange = function () {
+  var reader = new FileReader();
+
+  reader.onload = function (e) {
+    var img = document.createElement("img");
+    img.id = "log-image-id";
+    img.src = e.target.result;
+    img.style.width = "100px";
+    img.style.height = "100px";
+
+    // Clear the div and add the new image
+    imageInputDiv.innerHTML = "";
+    imageInputDiv.appendChild(img);
+  };
+
+  // Read the image file as a data URL
+  reader.readAsDataURL(this.files[0]);
+};
+
+const openLogModal = () => {
+  logModal.style.display = "block";
+  logForm.reset();
+  imageInputDiv.innerHTML = "";
+};
 
 let isLogUpdateMode = false;
 let currentLogCode = null;
 
-// Open the log modal
-const openLogModal = () => {
-  logModal.style.display = "block";
-  logForm.reset();
-  logButton.textContent = "Add Log";
-};
-
-// Close the log modal
 const closeLogModal = () => {
   logModal.style.display = "none";
   logForm.reset();
+  logButton.textContent = "Add Log";
   isLogUpdateMode = false;
   currentLogCode = null;
 };
 
-// Event Listeners for Modal Open/Close
-addLogButton.addEventListener("click", openLogModal);
-document.getElementById("log-modal-close").addEventListener("click", closeLogModal);
+document
+  .getElementById("add-log")
+  .addEventListener("click", openLogModal);
+document
+  .getElementById("log-modal-close")
+  .addEventListener("click", closeLogModal);
 
 // Fetch all logs and populate the table
 const loadLogsIntoTable = async () => {
@@ -45,26 +71,33 @@ const loadLogsIntoTable = async () => {
 // Add a single log entry to the table
 const addLogToTable = (log) => {
   const row = document.createElement("tr");
-
   const keys = ["logCode", "details", "logDate"];
-
-  // Add table cells for each key
   keys.forEach((key) => {
     const cell = document.createElement("td");
-    cell.textContent = log[key] || "N/A";
+    cell.textContent = log[key];
     row.appendChild(cell);
   });
 
-  // Image column
   const imageCell = document.createElement("td");
-  imageCell.innerHTML = log.observedImage ? `<img src="${log.observedImage}" alt="Image" width="50" height="50" />` : "N/A";
+  const image = document.createElement("img");
+
+  const base64Image = log.observedImage;
+  
+  const imageFormat = getImageFormat(base64Image);
+  image.src = `data:${imageFormat};base64,${base64Image}`;
+  image.className = "log-image";
+  image.style.width = "50px";
+  image.style.height = "50px";
+  imageCell.appendChild(image);
   row.appendChild(imageCell);
 
   // Add Update button
   const updateCell = document.createElement("td");
   const updateButton = document.createElement("button");
+
   updateButton.textContent = "Update";
   updateButton.className = "action-button";
+
   updateButton.addEventListener("click", () => {
     openLogModal();
     fillFormWithLogData(log);
@@ -82,7 +115,7 @@ const addLogToTable = (log) => {
   removeButton.className = "action-button";
   removeButton.addEventListener("click", async () => {
     try {
-      const response = await fetch(`http://localhost:5055/courseWork/api/v1/logs/${log.logCode}`, {
+      const response = await fetch(`http://localhost:5055/courseWork/api/v1/logs/${log.logCode}`,{
         method: "DELETE",
       });
       if (response.ok) {
@@ -101,54 +134,92 @@ const addLogToTable = (log) => {
   logTableList.appendChild(row);
 };
 
-// Fill form with log data for updating
+function getImageFormat(base64String) {
+  const prefix = base64String.substr(0, 5);
+  if (prefix === "/9j/4") return "image/jpeg";
+  if (prefix === "iVBOR") return "image/png";
+  return "image/png";
+}
+
 const fillFormWithLogData = (log) => {
-//   document.getElementById("logCode").value = log.logCode || "";
-  document.getElementById("logDate").value = log.logDate || "";
-  document.getElementById("logDetails").value = log.details || "";
-  document.getElementById("observedImage").value = log.observedImage || "";
-  document.getElementById("field").value = log.field || "";
-  document.getElementById("crop").value = log.crop || "";
-  document.getElementById("staff").value = log.staff || "";
+    // Populate text fields
+  document.getElementById("logDate").value = log.logDate;
+  document.getElementById("logDetails").value = log.details;
+  document.getElementById("field").value = log.fieldCodes;
+  document.getElementById("crop").value = log.cropCodes;
+  document.getElementById("staff").value = log.staffIds;
+  
+  console.log(log); // Debug log data
+
+  const base64Image = log.observedImage;
+  if(base64Image) {
+    const imageFormat = getImageFormat(base64Image);
+    const img = document.createElement("img");
+    img.src = `data:${imageFormat};base64,${base64Image}`;
+    img.id = "log-image-id";
+    img.style.width = "100px";
+    img.style.height = "100px";
+
+    imageInputDiv.innerHTML = "";
+    imageInputDiv.appendChild(img);
+  }else{
+    imageInputDiv.innerHTML = "No Image Available";
+  }  
 };
 
 // Handle form submission
 logForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const logData = {
-    // logCode: document.getElementById("logCode").value,
-    logDate: document.getElementById("logDate").value,
-    details: document.getElementById("logDetails").value,
-    observedImage: document.getElementById("observedImage").files[0]?.name || "N/A",
-    field: document.getElementById("field").value,
-    crop: document.getElementById("crop").value,
-    staff: document.getElementById("staff").value,
-  };
+  const logDate = document.getElementById("logDate").value;
+  const logDetails = document.getElementById("logDetails").value;
+  const field = document.getElementById("field").value;
+  const crop = document.getElementById("crop").value;
+  const staff = document.getElementById("staff").value;
 
-  const url = isLogUpdateMode
-    ? `http://localhost:5055/courseWork/api/v1/logs/${currentLogCode}`
-    : "http://localhost:5055/courseWork/api/v1/logs";
-  const method = isLogUpdateMode ? "PATCH" : "POST";
+  const formData = new FormData();
+  formData.append("logDate", logDate);
+  formData.append("details", logDetails);
+  formData.append("fieldCodes", field);
+  formData.append("cropCodes", crop);
+  formData.append("staffIds", staff);
+
+  let imageFile = imageInput.files[0];
+
+  if (imageFile) {
+    formData.append("observedImage", imageFile, imageFile.name);
+  } else {
+    formData.append("observedImage", new Blob(), "empty");
+  }
 
   try {
-    const response = await fetch(url, {
-      method,
-      body: logData,
-    });
-
+    let url = "http://localhost:5055/courseWork/api/v1/logs";
+    let method = isLogUpdateMode ? "PATCH" : "POST";
+    let successMessage = isLogUpdateMode
+      ? "Log Updated Successfully"
+      : "Log Added Successfully";
+  
+  if (isLogUpdateMode) {
+    url += `/${currentLogCode}`;
+  }
+  
+  const response = await fetch(url, {
+    method: method,
+    body: formData,
+  });
+  
     if (response.ok) {
-      alert(isLogUpdateMode ? "Log updated successfully!" : "Log added successfully!");
-      loadLogsIntoTable();
+      const result = await response.text();
+      alert(successMessage);
+      await loadLogsIntoTable();
       closeLogModal();
     } else {
       const errorText = await response.text();
       alert(`Operation failed: ${errorText}`);
     }
   } catch (error) {
-    console.error("Error:", error);
+    alert("An error occurred. Check the console for details.");
   }
 });
 
-// Initialize table on page load
 loadLogsIntoTable();
