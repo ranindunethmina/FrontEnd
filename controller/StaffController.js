@@ -126,12 +126,59 @@ const fillFormWithStaffData = (staff) => {
   document.getElementById("address5").value = staff.addressLine05 || "";
 };
 
+const validateStaffForm = () => {
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName = document.getElementById("lastName").value.trim();
+  const contactNo = document.getElementById("contactNo").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const dob = new Date(document.getElementById("dob").value);
+  const joinedDate = new Date(document.getElementById("joinedDate").value);
+
+  const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/;
+  const contactPattern = /^\d{10}$/;
+
+  if (!firstName || firstName.length < 3 || firstName.length > 150) {
+    alert("First Name must be between 3 and 150 characters.");
+    return false;
+  }
+
+  if (!lastName || lastName.length < 3 || lastName.length > 150) {
+    alert("Last Name must be between 3 and 150 characters.");
+    return false;
+  }
+
+  if (!contactNo || !contactPattern.test(contactNo)) {
+    alert("Invalid Contact Number. It must be exactly 10 digits.");
+    return false;
+  }
+
+  if (!email || !emailPattern.test(email)) {
+    alert("Invalid Email Address.");
+    return false;
+  }
+
+  if (isNaN(dob.getTime()) || dob >= new Date()) {
+    alert("Date of Birth must be in the past.");
+    return false;
+  }
+
+  if (isNaN(joinedDate.getTime()) || joinedDate > new Date()) {
+    alert("Joined Date must not be in the future.");
+    return false;
+  }
+
+  return true;
+};
+
 // Handle form submission
 staffForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
+  if (!validateStaffForm()) {
+    return;
+  }
+
   const staffData = {
-    // id: document.getElementById("staffId").value,
     firstName: document.getElementById("firstName").value,
     lastName: document.getElementById("lastName").value,
     designation: document.getElementById("designation").value,

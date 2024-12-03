@@ -100,7 +100,6 @@ const addVehicleToTable = (vehicle) => {
 
 // Fill form with vehicle data for updating
 const fillFormWithVehicleData = (vehicle) => {
-  // document.getElementById("vehicleCode").value = vehicle.vehicleCode;
   document.getElementById("licensePlate").value = vehicle.licensePlate;
   document.getElementById("vehicleCategory").value = vehicle.category;
   document.getElementById("fuelType").value = vehicle.fuelType;
@@ -109,11 +108,45 @@ const fillFormWithVehicleData = (vehicle) => {
   document.getElementById("remarks").value = vehicle.remarks;
 };
 
+const validateVehicleForm = () => {
+  const licensePlate = document.getElementById("licensePlate").value;
+  const category = document.getElementById("vehicleCategory").value;
+  const fuelType = document.getElementById("fuelType").value;
+  const remarks = document.getElementById("remarks").value;
+
+  // Regex for Fuel Type
+  const fuelTypePattern = /^(Petrol|Diesel|Electric|Hybrid)$/;
+
+  if (!licensePlate) {
+    alert("License Plate cannot be empty.");
+    return false;
+  }
+
+  if (!category || category.length < 3 || category.length > 50) {
+    alert("Category must be between 3 and 50 characters.");
+    return false;
+  }
+
+  if (!fuelType || !fuelTypePattern.test(fuelType)) {
+    alert("Fuel Type must be one of the following: Petrol, Diesel, Electric, or Hybrid.");
+    return false;
+  }
+
+  if (remarks.length > 255) {
+    alert("Remarks must not exceed 255 characters.");
+    return false;
+  }
+
+  return true;
+};
 // Handle form submission
 vehicleForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  // const vehicleCode = document.getElementById("vehicleCode").value;
+  if (!validateVehicleForm()) {
+    return;
+  }
+
   const licensePlate = document.getElementById("licensePlate").value;
   const category = document.getElementById("vehicleCategory").value;
   const fuelType = document.getElementById("fuelType").value;
@@ -122,7 +155,6 @@ vehicleForm.addEventListener("submit", async (event) => {
   const remarks = document.getElementById("remarks").value;
 
   const vehicleData = {
-    // vehicleCode,
     licensePlate,
     category,
     fuelType,

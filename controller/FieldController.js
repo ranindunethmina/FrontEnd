@@ -230,13 +230,23 @@ fieldForm.addEventListener("submit", async (event) => {
   const name = document.getElementById("name").value;
   const locationInput = document.getElementById("location").value;
   const size = document.getElementById("size").value;
+  
+  if (!name || name.length < 3 || name.length > 100) {
+    alert("Field Name must be between 3 and 100 characters and cannot be empty.");
+    return;
+  }
 
   const [latitude, longitude] = locationInput.split(",").map(coord => parseFloat(coord.trim()));
   if (isNaN(latitude) || isNaN(longitude)) {
     alert("Please enter a valid location in the format: latitude,longitude");
     return;
   }
-
+  
+  if (isNaN(size) || size <= 0) {
+    alert("Extent Size must be a number greater than zero.");
+    return;
+  }
+  
   const location = `${latitude},${longitude}`; // Format as "latitude,longitude"
 
   const formData = new FormData();
