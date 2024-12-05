@@ -1,3 +1,5 @@
+import { getCookie } from "./TokenController.js";
+
 // Select Elements
 var imageInput = document.getElementById("input-image");
 var imageInputDiv = document.querySelector(".image-input");
@@ -32,7 +34,7 @@ imageInput.onchange = function () {
 const openCropModal = () => {
   cropModal.style.display = "block";
   cropForm.reset();
-  imageInputDiv.innerHTML = ""; // Clear image div
+  imageInputDiv.innerHTML = "";
 };
 
 let isCropUpdateMode = false;
@@ -53,13 +55,31 @@ document
   .getElementById("crop-modal-close")
   .addEventListener("click", closeCropModal);
 
+async function authenticatedFetch(url, options = {}) {
+  const token = getCookie("authToken");
+
+  if (!token) {
+    throw new Error("Authentication token is missing.");
+  }
+
+  const headers = options.headers || {};
+  headers["Authorization"] = `Bearer ${token}`;
+
+  return fetch(url, { ...options, headers });
+}
+
 // Fetch all crops and populate the table
-const loadCropsIntoTable = async () => {
+export async function loadCropsIntoTable() {
   try {
-    const response = await fetch("http://localhost:5055/courseWork/api/v1/crops/allCrop");
+    const response = await authenticatedFetch(
+      "http://localhost:5055/courseWork/api/v1/crops/allCrop", 
+      { method: "GET"}
+    );
+
     if (!response.ok) {
       throw new Error(`Failed to fetch crops: ${response.statusText}`);
     }
+
     const crops = await response.json();
     cropTableList.innerHTML = "";
     crops.forEach((crop) => addCropToTable(crop));
@@ -115,9 +135,11 @@ const addCropToTable = (crop) => {
   removeButton.className = "action-button";
   removeButton.addEventListener("click", async () => {
     try {
-      const response = await fetch(`http://localhost:5055/courseWork/api/v1/crops/${crop.cropCode}`,{
-          method: "DELETE",
-      });
+      const response = await authenticatedFetch(
+        `http://localhost:5055/courseWork/api/v1/crops/${crop.cropCode}`,
+        { method: "DELETE" }
+      );
+
       if (response.ok) {
         row.remove();
       } else {
@@ -163,7 +185,6 @@ const fillFormWithCropData = (crop) => {
     imageInputDiv.innerHTML = "";
     imageInputDiv.appendChild(img);
   } else {
-    // If no image is available
     imageInputDiv.innerHTML = "No Image Available";
   }
 };
@@ -226,7 +247,7 @@ cropForm.addEventListener("submit", async (event) => {
     url += `/${currentCropCode}`;
   }
 
-  const response = await fetch(url, {
+  const response = await authenticatedFetch(url, {
       method: method,
       body: formData,
   });

@@ -1,53 +1,53 @@
-// Get form and input elements
-const signInForm = document.getElementById("signInForm");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-
-// Event listener for form submission
-signInForm.addEventListener("submit", async (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-
-    // Gather form data
-    const credentials = {
-        email: emailInput.value.trim(),
-        password: passwordInput.value.trim()
-    };
-
-    // Validate form inputs
-    if (!credentials.email || !credentials.password) {
+import { saveCookie, getCookie } from "./TokenController.js";
+  // Login function
+  function login(email, password) {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: "http://localhost:5055/courseWork/api/v1/auth/signin",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ email, password }),
+        success: function (result) {
+          console.log("Login successful:", result);
+          resolve(result); // Resolving with the response result
+        },
+        error: function (xhr, status, error) {
+          console.error("Login failed:", error);
+          reject(xhr.responseJSON || error); // Rejecting with the server error message or raw error
+        },
+      });
+    });
+  }
+  
+  // Event listener for sign-in
+  $(document).ready(function () {
+    $("#signInForm").on("submit", function (event) {
+      event.preventDefault(); // Prevent default form submission behavior
+  
+      const email = $("#email").val().trim();
+      const password = $("#password").val().trim();
+  
+      // Basic input validation
+      if (!email || !password) {
         alert("Please enter both email and password.");
         return;
-    }
-
-    try {
-        // Send POST request to the backend
-        const response = await fetch("http://localhost:5055/courseWork/api/v1/auth/signin", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(credentials)
+      }
+  
+      // Call login function
+      login(email, password)
+        .then((response) => {
+          // Save email and token
+          localStorage.setItem("userEmail", email);
+          const token = response.token;
+          saveCookie("authToken", token);
+          console.log("Token saved as cookie:", getCookie("authToken"));
+          // Redirect to the home page
+          window.location.href = "/dashboard.html"; // Update with your homepage URL
+        })
+        .catch((error) => {
+          console.error("Sign-in error:", error);
+          const errorMessage = error.message || "Invalid email or password.";
+          alert(errorMessage); // Update to Notyf or other libraries as needed
         });
-
-        if (response.ok) {
-            // Parse the response body
-            const data = await response.json();
-            console.log("Authentication successful:", data);
-
-            // Store the tokens in localStorage or cookies
-            localStorage.setItem("accessToken", data.accessToken);
-            localStorage.setItem("refreshToken", data.refreshToken);
-
-            // Redirect to the dashboard
-            alert("Sign-in successful! Redirecting to the dashboard...");
-            window.location.href = "/dashboard.html"; // Update with your dashboard URL
-        } else if (response.status === 401) {
-            alert("Invalid email or password. Please try again.");
-        } else {
-            alert("An unexpected error occurred. Please try again later.");
-        }
-    } catch (error) {
-        console.error("Error during sign-in:", error);
-        alert("Failed to connect to the server. Please check your connection and try again.");
-    }
-});
+    });
+  });

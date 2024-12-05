@@ -1,3 +1,10 @@
+import { loadCropsIntoTable } from "./CropController.js";
+import { loadFieldIntoTable } from "./FieldController.js";
+import { loadVehiclesIntoTable } from "./VehicleController.js";
+import { loadStaffIntoTable } from "./StaffController.js";
+import { loadEquipmentIntoTable } from "./EquipmentController.js"; 
+import { loadLogsIntoTable } from "./logController.js";
+
 document.getElementById("home-button").addEventListener("click", function () {
   document.getElementById("crop-page").style.display = "none";
   document.getElementById("staff-page").style.display = "none";

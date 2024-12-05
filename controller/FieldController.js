@@ -1,3 +1,5 @@
+import { getCookie } from "./TokenController.js";
+
 // Select Elements
 var imageInput1 = document.getElementById("field-image-1");
 var imageInputDiv1 = document.querySelector(".image-input-1");
@@ -85,13 +87,31 @@ document
   .getElementById("field-modal-close")
   .addEventListener("click", closeFieldModal);
 
+async function authenticatedFetch(url, options = {}) {
+  const token = getCookie("authToken");
+  
+  if (!token) {
+    throw new Error("Authentication token is missing.");
+  }
+  
+  const headers = options.headers || {};
+  headers["Authorization"] = `Bearer ${token}`;
+  
+  return fetch(url, { ...options, headers });
+}  
+
 // Fetch all fields and populate the table
-const loadFieldIntoTable = async () => {
+export async function loadFieldIntoTable() {
   try {
-    const response = await fetch("http://localhost:5055/courseWork/api/v1/field/allField");
+    const response = await authenticatedFetch(
+      "http://localhost:5055/courseWork/api/v1/field/allField",
+      { method: "GET"}
+    );
+
     if (!response.ok) {
       throw new Error(`Failed to fetch fields: ${response.statusText}`);
     }
+
     const fields = await response.json();
     fieldTableList.innerHTML = "";
     fields.forEach((field) => addFieldToTable(field));
@@ -166,9 +186,11 @@ const addFieldToTable = (field) => {
   removeButton.className = "action-button";
   removeButton.addEventListener("click", async () => {
     try {
-      const response = await fetch(`http://localhost:5055/courseWork/api/v1/field/${field.fieldCode}`, {
-        method: "DELETE",
-      });
+      const response = await authenticatedFetch(
+        `http://localhost:5055/courseWork/api/v1/field/${field.fieldCode}`, 
+        { method: "DELETE" }
+      );
+
       if (response.ok) {
         row.remove();
       } else {
@@ -200,7 +222,7 @@ const fillFormWithFieldData = (field) => {
 
   // Clear and add first image
   const img1 = document.createElement("img");
-  const base64Image1 = field.fieldImage1; // Handle missing image
+  const base64Image1 = field.fieldImage1;
   const imageFormat1 = getImageFormat(base64Image1);
   img1.src = base64Image1 ? `data:${imageFormat1};base64,${base64Image1}` : "";
   img1.id = "field-image-id1";
@@ -212,7 +234,7 @@ const fillFormWithFieldData = (field) => {
 
   // Clear and add second image
   const img2 = document.createElement("img");
-  const base64Image2 = field.fieldImage2; // Handle missing image
+  const base64Image2 = field.fieldImage2;
   const imageFormat2 = getImageFormat(base64Image2);
   img2.src = base64Image2 ? `data:${imageFormat2};base64,${base64Image2}` : "";
   img2.id = "field-image-id2";
@@ -285,8 +307,8 @@ fieldForm.addEventListener("submit", async (event) => {
   const method = isFieldUpdateMode ? "PATCH" : "POST";
 
   try {
-    const response = await fetch(url, {
-      method,
+    const response = await authenticatedFetch(url, {
+      method: method,
       body: formData,
     });
 
@@ -303,5 +325,4 @@ fieldForm.addEventListener("submit", async (event) => {
   }
 });
 
-// Initialize table on page load
 loadFieldIntoTable();

@@ -1,3 +1,5 @@
+import { getCookie } from "./TokenController.js";
+
 // Select Elements
 const vehicleTableList = document.getElementById("vehicle-table-list");
 const vehicleModal = document.getElementById("vehicle-modal");
@@ -26,16 +28,37 @@ const closeVehicleModal = () => {
 };
 
 // Event Listeners for Modal Open/Close
-addVehicleButton.addEventListener("click", openVehicleModal);
-document.getElementById("vehicle-modal-close").addEventListener("click", closeVehicleModal);
+addVehicleButton
+  .addEventListener("click", openVehicleModal);
+document
+  .getElementById("vehicle-modal-close")
+  .addEventListener("click", closeVehicleModal);
+
+async function authenticatedFetch(url, options = {}) {
+  const token = getCookie("authToken");
+
+  if (!token) {
+    throw new Error("Authentication token is missing.");
+  }
+
+  const headers = options.headers || {};
+  headers["Authorization"] = `Bearer ${token}`;
+
+  return fetch(url, { ...options, headers });
+}
 
 // Fetch all vehicles and populate the table
-const loadVehiclesIntoTable = async () => {
+export async function loadVehiclesIntoTable() {
   try {
-    const response = await fetch("http://localhost:5055/courseWork/api/v1/vehicle/allVehicle");
+    const response = await authenticatedFetch(
+      "http://localhost:5055/courseWork/api/v1/vehicle/allVehicle",
+      { method: "GET"}
+    );
+
     if (!response.ok) {
       throw new Error(`Failed to fetch vehicles: ${response.statusText}`);
     }
+
     const vehicles = await response.json();
     vehicleTableList.innerHTML = "";
     vehicles.forEach((vehicle) => addVehicleToTable(vehicle));
@@ -79,9 +102,11 @@ const addVehicleToTable = (vehicle) => {
   removeButton.className = "action-button";
   removeButton.addEventListener("click", async () => {
     try {
-      const response = await fetch(`http://localhost:5055/courseWork/api/v1/vehicle/${vehicle.vehicleCode}`, {
-        method: "DELETE",
-      });
+      const response = await authenticatedFetch(
+        `http://localhost:5055/courseWork/api/v1/vehicle/${vehicle.vehicleCode}`,
+        { method: "DELETE" }
+      );
+
       if (response.ok) {
         row.remove();
       } else {
@@ -169,8 +194,8 @@ vehicleForm.addEventListener("submit", async (event) => {
   const method = isVehicleUpdateMode ? "PATCH" : "POST";
 
   try {
-    const response = await fetch(url, {
-      method,
+    const response = await authenticatedFetch(url, {
+      method : method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(vehicleData),
     });
@@ -188,5 +213,4 @@ vehicleForm.addEventListener("submit", async (event) => {
   }
 });
 
-// Initialize table on page load
 loadVehiclesIntoTable();

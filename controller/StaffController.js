@@ -1,3 +1,5 @@
+import { getCookie } from "./TokenController.js";
+
 // Select Elements
 const staffTableList = document.getElementById("staff-table-list");
 const staffModal = document.getElementById("staff-modal");
@@ -24,16 +26,37 @@ const closeStaffModal = () => {
 };
 
 // Event Listeners for Modal Open/Close
-addStaffButton.addEventListener("click", openStaffModal);
-document.getElementById("staff-modal-close").addEventListener("click", closeStaffModal);
+addStaffButton
+  .addEventListener("click", openStaffModal);
+document
+  .getElementById("staff-modal-close")
+  .addEventListener("click", closeStaffModal);
+
+async function authenticatedFetch(url, options = {}) {
+  const token = getCookie("authToken");
+  
+  if (!token) {
+    throw new Error("Authentication token is missing.");
+  }
+  
+  const headers = options.headers || {};
+  headers["Authorization"] = `Bearer ${token}`;
+  
+  return fetch(url, { ...options, headers });
+}  
 
 // Fetch all staff members and populate the table
-const loadStaffIntoTable = async () => {
+export async function loadStaffIntoTable() {
   try {
-    const response = await fetch("http://localhost:5055/courseWork/api/v1/staff/allStaff");
+    const response = await authenticatedFetch(
+      "http://localhost:5055/courseWork/api/v1/staff/allStaff",
+      { method: "GET"}
+    );
+
     if (!response.ok) {
       throw new Error(`Failed to fetch staff: ${response.statusText}`);
     }
+    
     const staffMembers = await response.json();
     staffTableList.innerHTML = "";
     staffMembers.forEach((staff) => addStaffToTable(staff));
@@ -84,9 +107,11 @@ const addStaffToTable = (staff) => {
   removeButton.className = "action-button";
   removeButton.addEventListener("click", async () => {
     try {
-      const response = await fetch(`http://localhost:5055/courseWork/api/v1/staff/${staff.id}`, {
-        method: "DELETE",
-      });
+      const response = await authenticatedFetch(
+        `http://localhost:5055/courseWork/api/v1/staff/${staff.id}`,
+        { method: "DELETE"}
+      );
+
       if (response.ok) {
         row.remove();
       } else {
@@ -105,7 +130,6 @@ const addStaffToTable = (staff) => {
 
 // Fill form with staff data for updating
 const fillFormWithStaffData = (staff) => {
-  // document.getElementById("staffId").value = staff.id || "";
   document.getElementById("firstName").value = staff.firstName || "";
   document.getElementById("lastName").value = staff.lastName || "";
   document.getElementById("designation").value = staff.designation || "";
@@ -115,9 +139,7 @@ const fillFormWithStaffData = (staff) => {
   document.getElementById("contactNo").value = staff.contactNo || "";
   document.getElementById("email").value = staff.email || "";
   document.getElementById("role").value = staff.role || "";
-  // document.getElementById("field").value = staff.field || "";
-  // document.getElementById("vehicle").value = staff.vehicle || "";
-
+  
   // Populate address lines
   document.getElementById("address1").value = staff.addressLine01 || "";
   document.getElementById("address2").value = staff.addressLine02 || "";
@@ -201,8 +223,8 @@ staffForm.addEventListener("submit", async (event) => {
   const method = isStaffUpdateMode ? "PATCH" : "POST";
 
   try {
-    const response = await fetch(url, {
-      method,
+    const response = await authenticatedFetch(url, {
+      method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(staffData),
     });
@@ -220,5 +242,4 @@ staffForm.addEventListener("submit", async (event) => {
   }
 });
 
-// Initialize table on page load
 loadStaffIntoTable();

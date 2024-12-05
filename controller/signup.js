@@ -32,9 +32,7 @@ signUpForm.addEventListener("submit", async (event) => {
         });
 
         if (response.status === 201) {
-            // Success: Redirect or show success message
             alert("Sign-up successful! Please log in.");
-            window.location.href = "/signin.html";
         } else if (response.status === 400) {
             alert("Bad request. Please check your input.");
         } else if (response.status === 404) {
