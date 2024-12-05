@@ -56,6 +56,7 @@ imageInput2.onchange = function () {
   reader.readAsDataURL(this.files[0]);
 };
 
+// Open the Filed modal
 const openFieldModal = () => {
   fieldModal.style.display = "block";
   fieldForm.reset();
@@ -86,6 +87,7 @@ document
 document
   .getElementById("field-modal-close")
   .addEventListener("click", closeFieldModal);
+
 
 async function authenticatedFetch(url, options = {}) {
   const token = getCookie("authToken");
@@ -123,8 +125,8 @@ export async function loadFieldIntoTable() {
 // Add a single field to the table
 const addFieldToTable = (field) => {
   const row = document.createElement("tr");
+  
   const keys = ["fieldCode", "fieldName", "extentSize"];
-
   keys.forEach((key) => {
     const cell = document.createElement("td");
     cell.textContent = field[key];

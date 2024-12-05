@@ -14,7 +14,7 @@ let currentVehicleCode = null;
 const openVehicleModal = () => {
   vehicleModal.style.display = "block";
   if (!isVehicleUpdateMode) {
-    vehicleForm.reset(); // Reset form for adding a new vehicle
+    vehicleForm.reset();
   }
 };
 
@@ -33,6 +33,7 @@ addVehicleButton
 document
   .getElementById("vehicle-modal-close")
   .addEventListener("click", closeVehicleModal);
+
 
 async function authenticatedFetch(url, options = {}) {
   const token = getCookie("authToken");
@@ -139,7 +140,6 @@ const validateVehicleForm = () => {
   const fuelType = document.getElementById("fuelType").value;
   const remarks = document.getElementById("remarks").value;
 
-  // Regex for Fuel Type
   const fuelTypePattern = /^(Petrol|Diesel|Electric|Hybrid)$/;
 
   if (!licensePlate) {
@@ -164,6 +164,7 @@ const validateVehicleForm = () => {
 
   return true;
 };
+
 // Handle form submission
 vehicleForm.addEventListener("submit", async (event) => {
   event.preventDefault();

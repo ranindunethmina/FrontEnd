@@ -6,23 +6,20 @@ const roleSelect = document.getElementById("role");
 
 // Event listener for form submission
 signUpForm.addEventListener("submit", async (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault(); 
 
-    // Gather form data
     const userData = {
         email: emailInput.value.trim(),
         password: passwordInput.value.trim(),
         role: roleSelect.value.trim()
     };
 
-    // Validate form inputs
     if (!userData.email || !userData.password || !userData.role) {
         alert("Please fill out all fields.");
         return;
     }
 
     try {
-        // Send POST request to the backend
         const response = await fetch("http://localhost:5055/courseWork/api/v1/auth/signup", {
             method: "POST",
             headers: {

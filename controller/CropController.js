@@ -31,6 +31,7 @@ imageInput.onchange = function () {
   reader.readAsDataURL(this.files[0]);
 };
 
+// Open the Crop modal
 const openCropModal = () => {
   cropModal.style.display = "block";
   cropForm.reset();
@@ -40,6 +41,7 @@ const openCropModal = () => {
 let isCropUpdateMode = false;
 let currentCropCode = null;
 
+// Close the crop modal
 const closeCropModal = () => {
   cropModal.style.display = "none";
   cropForm.reset();
@@ -48,12 +50,14 @@ const closeCropModal = () => {
   currentCropCode = null;
 };
 
+// Event Listeners for Modal Open/Close
 document
   .getElementById("add-crop")
   .addEventListener("click", openCropModal);
 document
   .getElementById("crop-modal-close")
   .addEventListener("click", closeCropModal);
+
 
 async function authenticatedFetch(url, options = {}) {
   const token = getCookie("authToken");
@@ -163,8 +167,8 @@ function getImageFormat(base64String) {
   return "image/png";
 }
 
+// Fill form with vehicle data for updating
 const fillFormWithCropData = (crop) => {
-  // Populate text fields
   document.getElementById("cropCommonName").value = crop.commonName;
   document.getElementById("cropScientificName").value = crop.scientificName;
   document.getElementById("cropCategory").value = crop.category;
@@ -199,7 +203,6 @@ cropForm.addEventListener("submit", async (event) => {
   const season = document.getElementById("cropSeason").value;
   const field = document.getElementById("cropField").value;
   
-  // Validate form data
   if (!commonName) {
     alert("Common Name cannot be empty");
     return;
@@ -253,7 +256,6 @@ cropForm.addEventListener("submit", async (event) => {
   });
 
     if (response.ok) {
-      const result = await response.text();
       alert(successMessage);
       await loadCropsIntoTable();
       closeCropModal();

@@ -32,6 +32,7 @@ document
   .getElementById("staff-modal-close")
   .addEventListener("click", closeStaffModal);
 
+
 async function authenticatedFetch(url, options = {}) {
   const token = getCookie("authToken");
   
@@ -72,7 +73,6 @@ const addStaffToTable = (staff) => {
   const keys = [
     "id", "firstName", "lastName", "designation", "gender", "contactNo", "email"];
 
-  // Add table cells for each key
   keys.forEach((key) => {
     const cell = document.createElement("td");
     cell.textContent = staff[key] || "N/A";
@@ -88,8 +88,10 @@ const addStaffToTable = (staff) => {
   // Add Update button
   const updateCell = document.createElement("td");
   const updateButton = document.createElement("button");
+  
   updateButton.textContent = "Update";
   updateButton.className = "action-button";
+  
   updateButton.addEventListener("click", () => {
     openStaffModal();
     fillFormWithStaffData(staff);
