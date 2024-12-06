@@ -135,9 +135,18 @@ const addCropToTable = (crop) => {
   // Add Remove button
   const removeCell = document.createElement("td");
   const removeButton = document.createElement("button");
+
   removeButton.textContent = "Remove";
   removeButton.className = "action-button";
+
   removeButton.addEventListener("click", async () => {
+    const confirmDelete = confirm(
+      `Are you sure you want to delete the crop: ${crop.commonName}?`
+    );
+    if (!confirmDelete) {
+      return;
+    }
+
     try {
       const response = await authenticatedFetch(
         `http://localhost:5055/courseWork/api/v1/crops/${crop.cropCode}`,
@@ -145,12 +154,14 @@ const addCropToTable = (crop) => {
       );
 
       if (response.ok) {
+        alert(`Crop "${crop.commonName}" deleted successfully.`);
         row.remove();
       } else {
-        console.error("Failed to delete crop");
+        const errorText = await response.text();
+        alert(`Failed to delete crop: ${errorText}`);
       }
     } catch (error) {
-      console.error("Error deleting crop:", error);
+      alert("An error occurred while deleting the crop.");
     }
   });
   removeCell.appendChild(removeButton);

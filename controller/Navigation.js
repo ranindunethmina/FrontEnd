@@ -92,3 +92,19 @@ document.getElementById("equipment-button").addEventListener("click", function (
   // Load equipment
   loadEquipmentIntoTable();
 });
+
+const signOutButton = document.getElementById("sign-out-button");
+
+signOutButton.addEventListener("click", () => {
+  const confirmLogout = confirm("Are you sure you want to sign out?");
+  if (!confirmLogout) {
+    return; // Exit if the user cancels
+  }
+
+  // Clear authentication token (example: cookie or localStorage)
+  document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  localStorage.removeItem("authToken"); // If stored in localStorage
+
+  // Redirect to login page
+  window.location.href = "/signin.html"; // Update this URL to your login page
+});

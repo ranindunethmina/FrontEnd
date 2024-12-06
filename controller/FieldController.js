@@ -184,9 +184,17 @@ const addFieldToTable = (field) => {
   // Add Remove button
   const removeCell = document.createElement("td");
   const removeButton = document.createElement("button");
+
   removeButton.textContent = "Remove";
   removeButton.className = "action-button";
+
   removeButton.addEventListener("click", async () => {
+    const confirmDelete = confirm(
+      `Are you sure you want to delete the field: ${field.fieldName}?`
+    );
+    if (!confirmDelete) {
+      return;
+    }
     try {
       const response = await authenticatedFetch(
         `http://localhost:5055/courseWork/api/v1/field/${field.fieldCode}`, 
@@ -194,12 +202,14 @@ const addFieldToTable = (field) => {
       );
 
       if (response.ok) {
+        alert(`Crop "${field.fieldName}" deleted successfully.`);
         row.remove();
       } else {
-        console.error("Failed to delete field");
+        const errorText = await response.text();
+        alert(`Failed to delete crop: ${errorText}`);
       }
     } catch (error) {
-      console.error("Error deleting field:", error);
+      alert("An error occurred while deleting the crop.");
     }
   });
   removeCell.appendChild(removeButton);

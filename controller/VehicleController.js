@@ -99,9 +99,17 @@ const addVehicleToTable = (vehicle) => {
   // Add Remove button
   const removeCell = document.createElement("td");
   const removeButton = document.createElement("button");
+
   removeButton.textContent = "Remove";
   removeButton.className = "action-button";
+
   removeButton.addEventListener("click", async () => {
+    const confirmDelete = confirm(
+      `Are you sure you want to delete the vehicle: ${vehicle.licensePlate}?`
+    );
+    if (!confirmDelete) {
+      return;
+    }
     try {
       const response = await authenticatedFetch(
         `http://localhost:5055/courseWork/api/v1/vehicle/${vehicle.vehicleCode}`,
@@ -109,12 +117,14 @@ const addVehicleToTable = (vehicle) => {
       );
 
       if (response.ok) {
+        alert(`Crop "${vehicle.licensePlate}" deleted successfully.`);
         row.remove();
       } else {
-        console.error("Failed to delete vehicle");
+        const errorText = await response.text();
+        alert(`Failed to delete crop: ${errorText}`);
       }
     } catch (error) {
-      console.error("Error deleting vehicle:", error);
+      alert("An error occurred while deleting the crop.");
     }
   });
   removeCell.appendChild(removeButton);
